@@ -307,7 +307,52 @@ func (r *talosMachineSecretsResource) Create(ctx context.Context, req resource.C
 	}
 }
 
-func (r *talosMachineSecretsResource) Read(_ context.Context, _ resource.ReadRequest, _ *resource.ReadResponse) {
+func (r *talosMachineSecretsResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+    var state talosMachineSecretsResourceModelV1
+
+    diags := req.State.Get(ctx, &state)
+    resp.Diagnostics.Append(diags...)
+    if resp.Diagnostics.HasError() {
+        return
+    }
+
+    // Check if machine_secrets is stored as a string (old format) or structured (new format)
+    if state.MachineSecrets.Cluster.ID.IsUnknown() || state.MachineSecrets.Cluster.ID.IsNull() {
+        // This indicates we might have the old string format, try to read from file
+        id := state.ID.ValueString()
+        if _, err := os.Stat(id); err != nil {
+            // File doesn't exist, keep current state
+            diags = resp.State.Set(ctx, &state)
+            resp.Diagnostics.Append(diags...)
+            return
+        }
+
+        secretBytes, err := os.ReadFile(id)
+        if err != nil {
+            resp.Diagnostics.AddError("failed to read machine secrets file", err.Error())
+            return
+        }
+
+        var secretsBundle *secrets.Bundle
+        if err = yaml.Unmarshal(secretBytes, &secretsBundle); err != nil {
+            resp.Diagnostics.AddError("failed to unmarshal machine secrets", err.Error())
+            return
+        }
+
+        newState, err := secretsBundleTomachineSecrets(secretsBundle)
+        if err != nil {
+            resp.Diagnostics.AddError("failed to convert secrets bundle to machine secrets", err.Error())
+            return
+        }
+
+        newState.ID = state.ID
+        newState.TalosVersion = state.TalosVersion
+
+        state = newState
+    }
+
+    diags = resp.State.Set(ctx, &state)
+    resp.Diagnostics.Append(diags...)
 }
 
 func (r *talosMachineSecretsResource) ModifyPlan(ctx context.Context, req resource.ModifyPlanRequest, resp *resource.ModifyPlanResponse) {
