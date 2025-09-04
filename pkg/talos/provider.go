@@ -89,6 +89,7 @@ func (p *talosProvider) DataSources(_ context.Context) []func() datasource.DataS
 		NewTalosImageFactoryExtensionsVersionsDataSource,
 		NewTalosImageFactoryOverlaysVersionsDataSource,
 		NewTalosImageFactoryURLSDataSource,
+		NewTalosMachineSecretsDataSource,
 	}
 }
 
