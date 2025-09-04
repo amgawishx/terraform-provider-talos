@@ -2,6 +2,8 @@ package talos
 
 import (
 	"context"
+	"encoding/json"
+	"fmt"
 	"os"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
@@ -180,17 +182,21 @@ func (d *talosMachineSecretsDataSource) Read(ctx context.Context, req datasource
 	}
 
 	secretsFile, err := os.ReadFile(state.PathToSecrets.ValueString())
+	fmt.Printf(fmt.Sprint(err))
 	if err != nil {
 		resp.Diagnostics.AddError("invalid file path", "no file found in the path provided or the path is invalid")
 		return
 	}
 	err = yaml.Unmarshal(secretsFile, &state)
+	fmt.Printf(fmt.Sprint(err))
 	if err != nil {
 		//TODO: handle error more gracefully
 		resp.Diagnostics.AddError("corrupted secrets file", "the secrets file you provided is either corrupted or invalid")
 		return
 	}
-
+	str, err := json.Marshal(state)
+	fmt.Printf(fmt.Sprint(err))
+	fmt.Printf(fmt.Sprint(str))
 	state.ID = basetypes.NewStringValue("machine_secrets")
 
 	diags = resp.State.Set(ctx, &state)
