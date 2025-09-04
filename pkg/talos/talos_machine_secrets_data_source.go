@@ -63,48 +63,48 @@ func (d *talosMachineSecretsDataSource) Schema(_ context.Context, _ datasource.S
 						Attributes: map[string]schema.Attribute{
 							"id": schema.StringAttribute{
 								Description: "The cluster ID",
-								Required:    true,
+								Computed:    true,
 							},
 							"secret": schema.StringAttribute{
 								Description: "The cluster secret",
 								Sensitive:   true,
-								Required:    true,
+								Computed:    true,
 							},
 						},
 						Description: "The cluster secrets",
-						Required:    true,
+						Computed:    true,
 					},
 					"secrets": schema.SingleNestedAttribute{
 						Attributes: map[string]schema.Attribute{
 							"bootstrap_token": schema.StringAttribute{
 								Description: "The bootstrap token",
 								Sensitive:   true,
-								Required:    true,
+								Computed:    true,
 							},
 							"secretbox_encryption_secret": schema.StringAttribute{
 								Description: "The secretbox encryption secret",
 								Sensitive:   true,
-								Required:    true,
+								Computed:    true,
 							},
 							"aescbc_encryption_secret": schema.StringAttribute{
 								Description: "The AES-CBC encryption secret",
 								Sensitive:   true,
-								Required:    true,
+								Computed:    true,
 							},
 						},
 						Description: "kubernetes cluster secrets",
-						Required:    true,
+						Computed:    true,
 					},
 					"trustdinfo": schema.SingleNestedAttribute{
 						Attributes: map[string]schema.Attribute{
 							"token": schema.StringAttribute{
 								Description: "The trustd token",
 								Sensitive:   true,
-								Required:    true,
+								Computed:    true,
 							},
 						},
 						Description: "trustd secrets",
-						Required:    true,
+						Computed:    true,
 					},
 					"certs": schema.SingleNestedAttribute{
 						Attributes: map[string]schema.Attribute{
@@ -116,37 +116,37 @@ func (d *talosMachineSecretsDataSource) Schema(_ context.Context, _ datasource.S
 									"key": schema.StringAttribute{
 										Description: "The service account key",
 										Sensitive:   true,
-										Required:    true,
+										Computed:    true,
 									},
 								},
 								Description: "The service account secrets",
-								Required:    true,
+								Computed:    true,
 							},
 							"os": certSchema(),
 						},
-						Required: true,
+						Computed: true,
 					},
 				},
-				Required: true,
+				Computed: true,
 			},
 			"client_configuration": schema.SingleNestedAttribute{
 				Attributes: map[string]schema.Attribute{
 					"ca_certificate": schema.StringAttribute{
 						Description: "The client CA certificate",
-						Required:    true,
+						Computed:    true,
 					},
 					"client_certificate": schema.StringAttribute{
 						Description: "The client certificate",
-						Required:    true,
+						Computed:    true,
 					},
 					"client_key": schema.StringAttribute{
 						Sensitive:   true,
-						Required:    true,
+						Computed:    true,
 						Description: "The client key",
 					},
 				},
 				Description: "The read client configuration data",
-				Required:    true,
+				Computed:    true,
 			},
 		},
 	}
