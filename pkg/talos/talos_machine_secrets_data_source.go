@@ -21,7 +21,7 @@ type talosMachineSecretsDataSource struct{}
 type talosMachineSecretsDataSourceModelV1 struct {
 	ID                  types.String        `tfsdk:"id"`
 	TalosVersion        types.String        `tfsdk:"talos_version"`
-	PathToSecrets       types.String        `tfsdl:"path_to_secrets"`
+	PathToSecrets       types.String        `tfsdk:"path_to_secrets"`
 	MachineSecrets      machineSecrets      `tfsdk:"machine_secrets"`
 	ClientConfiguration clientConfiguration `tfsdk:"client_configuration"`
 }
