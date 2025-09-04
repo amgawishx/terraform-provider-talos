@@ -124,8 +124,10 @@ func (d *talosMachineSecretsDataSource) Schema(_ context.Context, _ datasource.S
 							},
 							"os": certSchema(),
 						},
+						Required: true,
 					},
 				},
+				Required: true,
 			},
 			"client_configuration": schema.SingleNestedAttribute{
 				Attributes: map[string]schema.Attribute{
